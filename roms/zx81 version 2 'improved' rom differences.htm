@@ -1,0 +1,1007 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type"
+content="text/html; charset=iso-8859-1">
+<meta name="GENERATOR" content="Microsoft FrontPage Express 2.0">
+<title>ZX81 ROMs ("Unimproved" verses "Improved")</title>
+</head>
+
+<body bgcolor="#C0C0C0">
+
+<h1>ZX81 ROMs (&quot;Unimproved&quot; verses &quot;Improved&quot;)</h1>
+
+<hr>
+
+<h2>Copyright</h2>
+
+<p>I am unsure of the copyright on the ZX81 ROM. The original
+copyright was with Sinclair Research Ltd. I believe that the
+copyright for the Sinclair Spectrum ROMs was transferred to
+Amstrad PLC. It is debatable if the ZX81 copyright was
+transferred at this time. I am assuming that the ROMs are able to
+be released into the public domain (It's been 20 years!). If
+anyone knows differently, please let me know and I will withdraw
+the ROMs from this site.</p>
+
+<p>&nbsp;</p>
+
+<h2>Overview</h2>
+
+<p>Having bought one of the first ZX81 on the market, I am
+blessed with a ZX81 with an &quot;unimproved&quot; ROM. As far as
+I know, the unimproved ROM has not been published on the Web,
+until now! My unimproved ROM was read using a PROM programmer.
+The ROM is of device type 2364, but was read using the device
+type set to Motorola MCM 68764, which is pin-compatible. The
+unimproved ROM had a couple of problems, the most serious being
+a floating point bug (it seemed to think that the SQR of 0.25 was
+1.3591409). The exact differences between the unimproved and
+improved ROM are described further below. The label names have
+been taken from Part A &amp; Part B of the ROM Disassembly by Dr. Ian
+Logan &amp; Dr. Frank O'Hara (good work guys, wherever you are
+now!).</p>
+
+<p>&nbsp;</p>
+
+<h2>Change Summary</h2>
+<div align="left">
+
+<table border="1" cellpadding="3" cellspacing="1">
+    <tr>
+        <td><strong>&quot;Unimproved&quot;<br>
+        Address Range</strong></td>
+        <td><strong>&quot;Improved&quot;<br>
+        Address Range</strong></td>
+        <td><strong>Description of Change</strong></td>
+    </tr>
+    <tr>
+        <td>0000-0EEE</td>
+        <td>0000-0EEE</td>
+        <td>No change (other than <a href="#Offset Differences">offsets</a>)</td>
+    </tr>
+    <tr>
+        <td>N/A</td>
+        <td>0EEF-0EF1</td>
+        <td>A new CALL instruction added to <a
+        href="ROMDifference.htm#Clear Workspace">clear the
+        workspace</a> during the INPUT routine</td>
+    </tr>
+    <tr>
+        <td>0EEF-0F39</td>
+        <td>0EF2-0F3C</td>
+        <td>No change (other than <a href="#Offset Differences">offsets</a>)</td>
+    </tr>
+    <tr>
+        <td>0F3A-0F40</td>
+        <td>0F3D-0F43</td>
+        <td>Rewritten <a href="#PAUSE">PAUSE</a> routine to
+        ensure bit 15 of FRAMES set.</td>
+    </tr>
+    <tr>
+        <td>0F41-102E</td>
+        <td>0F44-1031</td>
+        <td>No change (other than <a href="#Offset Differences">offsets</a>)</td>
+    </tr>
+    <tr>
+        <td>102F-1034</td>
+        <td>1032-1038</td>
+        <td>Rewritten <a href="#S-LET-NUM">numeric processing</a>
+        routine to cater for syntax checking</td>
+    </tr>
+    <tr>
+        <td>1035-1732</td>
+        <td>1039-1736</td>
+        <td>No change (other than <a href="#Offset Differences">offsets</a>)</td>
+    </tr>
+    <tr>
+        <td>1733-1735</td>
+        <td>N/A</td>
+        <td>Deleted spurious instructions causing <a
+        href="#FP Bug">floating point bug</a></td>
+    </tr>
+    <tr>
+        <td>1736-1DFD</td>
+        <td>1737-1DFE</td>
+        <td>No change (other than <a href="#Offset Differences">offsets</a>)</td>
+    </tr>
+    <tr>
+        <td>1DFE-1DFF</td>
+        <td>IDFF-1DFF</td>
+        <td>One <a href="#Spare Bytes">spare location</a> removed</td>
+    </tr>
+    <tr>
+        <td>1E00-1FFF</td>
+        <td>1E00-1FFF</td>
+        <td>No change to character map</td>
+    </tr>
+</table>
+</div>
+
+<p>&nbsp;</p>
+
+<h2>Change Details</h2>
+
+<h3><a name="Clear Workspace"><font color="#0000A0">(1) A new
+CALL instruction added to clear the workspace during the INPUT
+routine</font></a></h3>
+
+<p>Unimproved: </p>
+<div align="left">
+
+<table border="0" cellpadding="0" cellspacing="0"
+bgcolor="#FFFFFF">
+    <tr>
+        <td valign="top" width="50" nowrap><font size="2"
+        face="Courier New">0EE9</font></td>
+        <td valign="top" width="120" nowrap><font size="2"
+        face="Courier New">FD CB 08 7E</font></td>
+        <td valign="top" width="100" nowrap><font size="2"
+        face="Courier New">INPUT:</font></td>
+        <td valign="top" width="50" nowrap><font size="2"
+        face="Courier New">BIT</font></td>
+        <td valign="top" width="120" nowrap><font size="2"
+        face="Courier New">7,(IY+08)</font></td>
+        <td valign="top" nowrap><font size="2" face="Courier New">;
+        Test high byte of PPC for line number</font></td>
+    </tr>
+    <tr>
+        <td valign="top" width="50" nowrap><font size="2"
+        face="Courier New">0EED</font></td>
+        <td valign="top" width="120" nowrap><font size="2"
+        face="Courier New">20 2F</font></td>
+        <td valign="top" width="100" nowrap>&nbsp;</td>
+        <td valign="top" width="50" nowrap><font size="2"
+        face="Courier New">JR</font></td>
+        <td valign="top" width="120" nowrap><font size="2"
+        face="Courier New">NZ,0F1E</font></td>
+        <td valign="top" nowrap><font size="2" face="Courier New">;
+        REPORT-8 (Input must have line number)</font></td>
+    </tr>
+    <tr>
+        <td valign="top" width="50" nowrap><font size="2"
+        face="Courier New">0EEF</font></td>
+        <td valign="top" width="120" nowrap><font size="2"
+        face="Courier New">21 2D 40</font></td>
+        <td valign="top" width="100" nowrap>&nbsp;</td>
+        <td valign="top" width="50" nowrap><font size="2"
+        face="Courier New">LD</font></td>
+        <td valign="top" width="120" nowrap><font size="2"
+        face="Courier New">HL,402D</font></td>
+        <td valign="top" nowrap><font size="2" face="Courier New">;
+        FLAGX</font></td>
+    </tr>
+    <tr>
+        <td valign="top" width="50" nowrap><font size="2"
+        face="Courier New">0EF2</font></td>
+        <td valign="top" width="120" nowrap><font size="2"
+        face="Courier New">CB EE</font></td>
+        <td valign="top" width="100" nowrap>&nbsp;</td>
+        <td valign="top" width="50" nowrap><font size="2"
+        face="Courier New">SET</font></td>
+        <td valign="top" width="120" nowrap><font size="2"
+        face="Courier New">5,(HL)</font></td>
+        <td valign="top" nowrap><font size="2" face="Courier New">;
+        Set INPUT mode</font></td>
+    </tr>
+    <tr>
+        <td valign="top" width="50" nowrap><font size="2"
+        face="Courier New">0EF4</font></td>
+        <td valign="top" width="120" nowrap><font size="2"
+        face="Courier New">CB B6</font></td>
+        <td valign="top" width="100" nowrap>&nbsp;</td>
+        <td valign="top" width="50" nowrap><font size="2"
+        face="Courier New">RES</font></td>
+        <td valign="top" width="120" nowrap><font size="2"
+        face="Courier New">6,(HL)</font></td>
+        <td valign="top" nowrap><font size="2" face="Courier New">;
+        to string</font></td>
+    </tr>
+</table>
+</div>
+
+<p>Improved: </p>
+<div align="left">
+
+<table border="0" cellpadding="0" cellspacing="0"
+bgcolor="#FFFFFF">
+    <tr>
+        <td valign="top" width="50" nowrap><font size="2"
+        face="Courier New">0EE9</font></td>
+        <td valign="top" width="120" nowrap><font size="2"
+        face="Courier New">FD CB 08 7E</font></td>
+        <td valign="top" width="100" nowrap><font size="2"
+        face="Courier New">INPUT:</font></td>
+        <td valign="top" width="50" nowrap><font size="2"
+        face="Courier New">BIT</font></td>
+        <td valign="top" width="120" nowrap><font size="2"
+        face="Courier New">7,(IY+08)</font></td>
+        <td valign="top" nowrap><font size="2" face="Courier New">;
+        Test high byte of PPC for line number</font></td>
+    </tr>
+    <tr>
+        <td valign="top" width="50" nowrap><font size="2"
+        face="Courier New">0EED</font></td>
+        <td valign="top" width="120" nowrap><font size="2"
+        face="Courier New">20 2F</font></td>
+        <td valign="top" width="100" nowrap>&nbsp;</td>
+        <td valign="top" width="50" nowrap><font size="2"
+        face="Courier New">JR</font></td>
+        <td valign="top" width="120" nowrap><font size="2"
+        face="Courier New">NZ,0F21</font></td>
+        <td valign="top" nowrap><font size="2" face="Courier New">;
+        REPORT-8 (Input must have line number)</font></td>
+    </tr>
+    <tr>
+        <td valign="top" width="50" nowrap><font size="2"
+        face="Courier New">0EEF</font></td>
+        <td valign="top" width="120" nowrap><font size="2"
+        face="Courier New">CD A3 14</font></td>
+        <td valign="top" width="100" nowrap>&nbsp;</td>
+        <td valign="top" width="50" nowrap><font size="2"
+        face="Courier New">CALL</font></td>
+        <td valign="top" width="120" nowrap><font size="2"
+        face="Courier New">14A3</font></td>
+        <td valign="top" nowrap><font size="2" face="Courier New">;
+        Call X-TEMP to clears the workspace</font></td>
+    </tr>
+    <tr>
+        <td valign="top" width="50" nowrap><font size="2"
+        face="Courier New">0EF2</font></td>
+        <td valign="top" width="120" nowrap><font size="2"
+        face="Courier New">21 2D 40</font></td>
+        <td valign="top" width="100" nowrap>&nbsp;</td>
+        <td valign="top" width="50" nowrap><font size="2"
+        face="Courier New">LD</font></td>
+        <td valign="top" width="120" nowrap><font size="2"
+        face="Courier New">HL,402D</font></td>
+        <td valign="top" nowrap><font size="2" face="Courier New">;
+        FLAGX</font></td>
+    </tr>
+    <tr>
+        <td valign="top" width="50" nowrap><font size="2"
+        face="Courier New">0EF5</font></td>
+        <td valign="top" width="120" nowrap><font size="2"
+        face="Courier New">CB EE</font></td>
+        <td valign="top" width="100" nowrap>&nbsp;</td>
+        <td valign="top" width="50" nowrap><font size="2"
+        face="Courier New">SET</font></td>
+        <td valign="top" width="120" nowrap><font size="2"
+        face="Courier New">5,(HL)</font></td>
+        <td valign="top" nowrap><font size="2" face="Courier New">;
+        Set INPUT mode</font></td>
+    </tr>
+    <tr>
+        <td valign="top" width="50" nowrap><font size="2"
+        face="Courier New">0EF7</font></td>
+        <td valign="top" width="120" nowrap><font size="2"
+        face="Courier New">CB B6</font></td>
+        <td valign="top" width="100" nowrap>&nbsp;</td>
+        <td valign="top" width="50" nowrap><font size="2"
+        face="Courier New">RES</font></td>
+        <td valign="top" width="120" nowrap><font size="2"
+        face="Courier New">6,(HL)</font></td>
+        <td valign="top" nowrap><font size="2" face="Courier New">;
+        to string</font></td>
+    </tr>
+</table>
+</div>
+
+<p>&nbsp;</p>
+
+<h3><a name="PAUSE"><font color="#0000A0">(2) Rewritten PAUSE
+routine to ensure bit 15 of FRAMES set</font></a></h3>
+
+<p>Unimproved: </p>
+<div align="left">
+
+<table border="0" cellpadding="0" cellspacing="0"
+bgcolor="#FFFFFF">
+    <tr>
+        <td valign="top" width="50" nowrap><font size="2"
+        face="Courier New">0F2F</font></td>
+        <td valign="top" width="120" nowrap><font size="2"
+        face="Courier New">CD A7 0E</font></td>
+        <td valign="top" width="100" nowrap><font size="2"
+        face="Courier New">PAUSE:</font></td>
+        <td valign="top" width="50" nowrap><font size="2"
+        face="Courier New">CALL</font></td>
+        <td valign="top" width="120" nowrap><font size="2"
+        face="Courier New">0EA7</font></td>
+        <td valign="top" nowrap><font size="2" face="Courier New">;
+        Call FIND-INT to get the PAUSE parameter</font></td>
+    </tr>
+    <tr>
+        <td valign="top" width="50" nowrap><font size="2"
+        face="Courier New">0F32</font></td>
+        <td valign="top" width="120" nowrap><font color="#000000"
+        size="2" face="Courier New">CD E7 02</font></td>
+        <td valign="top" width="100" nowrap>&nbsp;</td>
+        <td valign="top" width="50" nowrap><font size="2"
+        face="Courier New">CALL</font></td>
+        <td valign="top" width="120" nowrap><font size="2"
+        face="Courier New">02E7</font></td>
+        <td valign="top" nowrap><font size="2" face="Courier New">;
+        Call SET-FAST to go into fast mode (but keep CDFLAG bit 6
+        set, indicating SLOW mode)</font></td>
+    </tr>
+    <tr>
+        <td valign="top" width="50" nowrap><font size="2"
+        face="Courier New">0F35</font></td>
+        <td valign="top" width="120" nowrap><font size="2"
+        face="Courier New">60</font></td>
+        <td valign="top" width="100" nowrap>&nbsp;</td>
+        <td valign="top" width="50" nowrap><font size="2"
+        face="Courier New">LD</font></td>
+        <td valign="top" width="120" nowrap><font size="2"
+        face="Courier New">H,B</font></td>
+        <td valign="top" nowrap><font size="2" face="Courier New">;
+        Move PAUSE parameter into HL</font></td>
+    </tr>
+    <tr>
+        <td valign="top" width="50" nowrap><font size="2"
+        face="Courier New">0F36</font></td>
+        <td valign="top" width="120" nowrap><font size="2"
+        face="Courier New">69</font></td>
+        <td valign="top" width="100" nowrap>&nbsp;</td>
+        <td valign="top" width="50" nowrap><font size="2"
+        face="Courier New">LD</font></td>
+        <td valign="top" width="120" nowrap><font size="2"
+        face="Courier New">L,C</font></td>
+        <td valign="top" nowrap><font size="2" face="Courier New">;
+        NB: This will be saved to FRAMES</font></td>
+    </tr>
+    <tr>
+        <td valign="top" width="50" nowrap><font size="2"
+        face="Courier New">0F37</font></td>
+        <td valign="top" width="120" nowrap><font size="2"
+        face="Courier New">CD 2D 02</font></td>
+        <td valign="top" width="100" nowrap>&nbsp;</td>
+        <td valign="top" width="50" nowrap><font size="2"
+        face="Courier New">CALL</font></td>
+        <td valign="top" width="120" nowrap><font size="2"
+        face="Courier New">022D</font></td>
+        <td valign="top" nowrap><font size="2" face="Courier New">;
+        Call DISPLAY-P to generate display until FRAMES zero or a
+        key is pressed</font></td>
+    </tr>
+    <tr>
+        <td valign="top" width="50" nowrap><font size="2"
+        face="Courier New">0F3A</font></td>
+        <td valign="top" width="120" nowrap><font size="2"
+        face="Courier New">CD 07 02</font></td>
+        <td valign="top" width="100" nowrap>&nbsp;</td>
+        <td valign="top" width="50" nowrap><font size="2"
+        face="Courier New">CALL</font></td>
+        <td valign="top" width="120" nowrap><font size="2"
+        face="Courier New">0207</font></td>
+        <td valign="top" nowrap><font size="2" face="Courier New">;
+        Call SLOW/FAST to re-enter &quot;normal&quot; slow mode</font></td>
+    </tr>
+    <tr>
+        <td valign="top" width="50" nowrap><font size="2"
+        face="Courier New">0F3D</font></td>
+        <td valign="top" width="120" nowrap><font size="2"
+        face="Courier New">FD CB 35 FE</font></td>
+        <td valign="top" width="100" nowrap>&nbsp;</td>
+        <td valign="top" width="50" nowrap><font size="2"
+        face="Courier New">SET</font></td>
+        <td valign="top" width="120" nowrap><font size="2"
+        face="Courier New">(IY+35),7</font></td>
+        <td valign="top" nowrap><font size="2" face="Courier New">;
+        Sets the top bit (bit 15) of FRAMES to indicate not in
+        PAUSE</font></td>
+    </tr>
+    <tr>
+        <td valign="top" width="50" nowrap><font size="2"
+        face="Courier New">0F41</font></td>
+        <td valign="top" width="120" nowrap><font size="2"
+        face="Courier New">18 05</font></td>
+        <td valign="top" width="100" nowrap>&nbsp;</td>
+        <td valign="top" width="50" nowrap><font size="2"
+        face="Courier New">JR</font></td>
+        <td valign="top" width="120" nowrap><font size="2"
+        face="Courier New">0F4B</font></td>
+        <td valign="top" nowrap><font size="2" face="Courier New">;
+        Jump to D-BOUNCE</font></td>
+    </tr>
+</table>
+</div>
+
+<p>Improved: </p>
+<div align="left">
+
+<table border="0" cellpadding="0" cellspacing="0"
+bgcolor="#FFFFFF">
+    <tr>
+        <td valign="top" width="50" nowrap><font size="2"
+        face="Courier New">0F32</font></td>
+        <td valign="top" width="120" nowrap><font size="2"
+        face="Courier New">CD A7 0E</font></td>
+        <td valign="top" width="100" nowrap><font size="2"
+        face="Courier New">PAUSE:</font></td>
+        <td valign="top" width="50" nowrap><font size="2"
+        face="Courier New">CALL</font></td>
+        <td valign="top" width="120" nowrap><font size="2"
+        face="Courier New">0EA7</font></td>
+        <td valign="top" nowrap><font size="2" face="Courier New">;
+        Call FIND-INT to get the PAUSE parameter</font></td>
+    </tr>
+    <tr>
+        <td valign="top" width="50" nowrap><font size="2"
+        face="Courier New">0F35</font></td>
+        <td valign="top" width="120" nowrap><font size="2"
+        face="Courier New">CD E7 02</font></td>
+        <td valign="top" width="100" nowrap>&nbsp;</td>
+        <td valign="top" width="50" nowrap><font size="2"
+        face="Courier New">CALL</font></td>
+        <td valign="top" width="120" nowrap><font size="2"
+        face="Courier New">02E7</font></td>
+        <td valign="top" nowrap><font size="2" face="Courier New">;
+        Call SET-FAST to go into fast mode (but keep CDFLAG bit 6
+        set, indicating SLOW mode)</font></td>
+    </tr>
+    <tr>
+        <td valign="top" width="50" nowrap><font size="2"
+        face="Courier New">0F38</font></td>
+        <td valign="top" width="120" nowrap><font size="2"
+        face="Courier New">60</font></td>
+        <td valign="top" width="100" nowrap>&nbsp;</td>
+        <td valign="top" width="50" nowrap><font size="2"
+        face="Courier New">LD</font></td>
+        <td valign="top" width="120" nowrap><font size="2"
+        face="Courier New">H,B</font></td>
+        <td valign="top" nowrap><font size="2" face="Courier New">;
+        Move PAUSE parameter into HL</font></td>
+    </tr>
+    <tr>
+        <td valign="top" width="50" nowrap><font size="2"
+        face="Courier New">0F39</font></td>
+        <td valign="top" width="120" nowrap><font size="2"
+        face="Courier New">69</font></td>
+        <td valign="top" width="100" nowrap>&nbsp;</td>
+        <td valign="top" width="50" nowrap><font size="2"
+        face="Courier New">LD</font></td>
+        <td valign="top" width="120" nowrap><font size="2"
+        face="Courier New">L,C</font></td>
+        <td valign="top" nowrap><font size="2" face="Courier New">;
+        NB: This will be saved to FRAMES</font></td>
+    </tr>
+    <tr>
+        <td valign="top" width="50" nowrap><font size="2"
+        face="Courier New">0F3A</font></td>
+        <td valign="top" width="120" nowrap><font size="2"
+        face="Courier New">CD 2D 02</font></td>
+        <td valign="top" width="100" nowrap>&nbsp;</td>
+        <td valign="top" width="50" nowrap><font size="2"
+        face="Courier New">CALL</font></td>
+        <td valign="top" width="120" nowrap><font size="2"
+        face="Courier New">022D</font></td>
+        <td valign="top" nowrap><font size="2" face="Courier New">;
+        Call DISPLAY-P to generate display until FRAMES zero or a
+        key is pressed</font></td>
+    </tr>
+    <tr>
+        <td valign="top" width="50" nowrap><font size="2"
+        face="Courier New">0F3D</font></td>
+        <td valign="top" width="120" nowrap><font size="2"
+        face="Courier New">FD 36 35 FF</font></td>
+        <td valign="top" width="100" nowrap>&nbsp;</td>
+        <td valign="top" width="50" nowrap><font size="2"
+        face="Courier New">LD</font></td>
+        <td valign="top" width="120" nowrap><font size="2"
+        face="Courier New">(IY+35),FF</font></td>
+        <td valign="top" nowrap><font size="2" face="Courier New">;
+        Set high byte of FRAMES</font></td>
+    </tr>
+    <tr>
+        <td valign="top" width="50" nowrap><font size="2"
+        face="Courier New">0F41</font></td>
+        <td valign="top" width="120" nowrap><font size="2"
+        face="Courier New">CD 07 02</font></td>
+        <td valign="top" width="100" nowrap>&nbsp;</td>
+        <td valign="top" width="50" nowrap><font size="2"
+        face="Courier New">CALL</font></td>
+        <td valign="top" width="120" nowrap><font size="2"
+        face="Courier New">0207</font></td>
+        <td valign="top" nowrap><font size="2" face="Courier New">;
+        Call SLOW/FAST to re-enter &quot;normal&quot; slow mode</font></td>
+    </tr>
+    <tr>
+        <td valign="top" width="50" nowrap><font size="2"
+        face="Courier New">0F44</font></td>
+        <td valign="top" width="120" nowrap><font size="2"
+        face="Courier New">18 05</font></td>
+        <td valign="top" width="100" nowrap>&nbsp;</td>
+        <td valign="top" width="50" nowrap><font size="2"
+        face="Courier New">JR</font></td>
+        <td valign="top" width="120" nowrap><font size="2"
+        face="Courier New">0F4B</font></td>
+        <td valign="top" nowrap><font size="2" face="Courier New">;
+        Jump to D-BOUNCE</font></td>
+    </tr>
+</table>
+</div>
+
+<p>&nbsp;</p>
+
+<h3><a name="S-LET-NUM"><font color="#0000A0">(3) Rewritten
+numeric processing routine to cater for syntax checking</font></a><font
+color="#0000A0">.</font></h3>
+
+<p>Unimproved: </p>
+<div align="left">
+
+<table border="0" cellpadding="0" cellspacing="0"
+bgcolor="#FFFFFF">
+    <tr>
+        <td valign="top" width="50" nowrap><font size="2"
+        face="Courier New">1022</font></td>
+        <td valign="top" width="120" nowrap><font size="2"
+        face="Courier New">FE 26</font></td>
+        <td valign="top" width="100" nowrap><font size="2"
+        face="Courier New">S-LET-NUM:</font></td>
+        <td valign="top" width="50" nowrap><font size="2"
+        face="Courier New">CP</font></td>
+        <td valign="top" width="120" nowrap><font size="2"
+        face="Courier New">26</font></td>
+        <td valign="top" nowrap><font size="2" face="Courier New">;
+        Jump if dealing with a digit 'A'=26H</font></td>
+    </tr>
+    <tr>
+        <td valign="top" width="50" nowrap><font size="2"
+        face="Courier New">1024</font></td>
+        <td valign="top" width="120" nowrap><font size="2"
+        face="Courier New">38 1D</font></td>
+        <td valign="top" width="100" nowrap>&nbsp;</td>
+        <td valign="top" width="50" nowrap><font size="2"
+        face="Courier New">JR</font></td>
+        <td valign="top" width="120" nowrap><font size="2"
+        face="Courier New">C,1043</font></td>
+        <td valign="top" nowrap><font size="2" face="Courier New">;
+        to the S-DECIMAL routine</font></td>
+    </tr>
+    <tr>
+        <td valign="top" width="50" nowrap><font size="2"
+        face="Courier New">1026</font></td>
+        <td valign="top" width="120" nowrap><font size="2"
+        face="Courier New">CD 18 11</font></td>
+        <td valign="top" width="100" nowrap>&nbsp;</td>
+        <td valign="top" width="50" nowrap><font size="2"
+        face="Courier New">CALL</font></td>
+        <td valign="top" width="120" nowrap><font size="2"
+        face="Courier New">1118</font></td>
+        <td valign="top" nowrap><font size="2" face="Courier New">;
+        We have a variable name. See if it exists by calling LOOK-VARS</font></td>
+    </tr>
+    <tr>
+        <td valign="top" width="50" nowrap><font size="2"
+        face="Courier New">1029</font></td>
+        <td valign="top" width="120" nowrap><font size="2"
+        face="Courier New">DA 4B 0D</font></td>
+        <td valign="top" width="100" nowrap>&nbsp;</td>
+        <td valign="top" width="50" nowrap><font size="2"
+        face="Courier New">JP</font></td>
+        <td valign="top" width="120" nowrap><font size="2"
+        face="Courier New">C,0D4B</font></td>
+        <td valign="top" nowrap><font size="2" face="Courier New">;
+        REPORT-2 (Undefined variable)</font></td>
+    </tr>
+    <tr>
+        <td valign="top" width="50" nowrap><font size="2"
+        face="Courier New">102C</font></td>
+        <td valign="top" width="120" nowrap><font size="2"
+        face="Courier New">CC A3 11</font></td>
+        <td valign="top" width="100" nowrap>&nbsp;</td>
+        <td valign="top" width="50" nowrap><font size="2"
+        face="Courier New">CALL</font></td>
+        <td valign="top" width="120" nowrap><font size="2"
+        face="Courier New">Z,11A3</font></td>
+        <td valign="top" nowrap><font size="2" face="Courier New">;
+        Call STK-VAR to stack parameters for a string or string
+        array</font></td>
+    </tr>
+    <tr>
+        <td valign="top" width="50" nowrap><font size="2"
+        face="Courier New">102F</font></td>
+        <td valign="top" width="120" nowrap><font size="2"
+        face="Courier New">FD CB 01 76</font></td>
+        <td valign="top" width="100" nowrap>&nbsp;</td>
+        <td valign="top" width="50" nowrap><font size="2"
+        face="Courier New">BIT</font></td>
+        <td valign="top" width="120" nowrap><font size="2"
+        face="Courier New">6,(IY+01)</font></td>
+        <td valign="top" nowrap><font size="2" face="Courier New">;
+        IY=4000H</font></td>
+    </tr>
+    <tr>
+        <td valign="top" width="50" nowrap><font size="2"
+        face="Courier New">1033</font></td>
+        <td valign="top" width="120" nowrap><font size="2"
+        face="Courier New">28 4E</font></td>
+        <td valign="top" width="100" nowrap>&nbsp;</td>
+        <td valign="top" width="50" nowrap><font size="2"
+        face="Courier New">JZ</font></td>
+        <td valign="top" width="120" nowrap><font size="2"
+        face="Courier New">1083</font></td>
+        <td valign="top" nowrap><font size="2" face="Courier New">;
+        Jump to S-CONT-2 to continue processing if not a number</font></td>
+    </tr>
+    <tr>
+        <td valign="top" width="50" nowrap><font size="2"
+        face="Courier New">1035</font></td>
+        <td valign="top" width="120" nowrap><font size="2"
+        face="Courier New">23</font></td>
+        <td valign="top" width="100" nowrap>&nbsp;</td>
+        <td valign="top" width="50" nowrap><font size="2"
+        face="Courier New">INC</font></td>
+        <td valign="top" width="120" nowrap><font size="2"
+        face="Courier New">HL</font></td>
+        <td valign="top" nowrap><font size="2" face="Courier New">;
+        A numeric value is to be stacked</font></td>
+    </tr>
+    <tr>
+        <td valign="top" width="50" nowrap><font size="2"
+        face="Courier New">1036</font></td>
+        <td valign="top" width="120" nowrap><font size="2"
+        face="Courier New">ED 5B 1C 40</font></td>
+        <td valign="top" width="100" nowrap>&nbsp;</td>
+        <td valign="top" width="50" nowrap><font size="2"
+        face="Courier New">LD</font></td>
+        <td valign="top" width="120" nowrap><font size="2"
+        face="Courier New">DE,(401C)</font></td>
+        <td valign="top" nowrap><font size="2" face="Courier New">;
+        so fetch the old STKEND</font></td>
+    </tr>
+</table>
+</div>
+
+<p>Improved: </p>
+<div align="left">
+
+<table border="0" cellpadding="0" cellspacing="0"
+bgcolor="#FFFFFF">
+    <tr>
+        <td valign="top" width="50" nowrap><font size="2"
+        face="Courier New">1025</font></td>
+        <td valign="top" width="120" nowrap><font size="2"
+        face="Courier New">FE 26</font></td>
+        <td valign="top" width="100" nowrap><font size="2"
+        face="Courier New">S-LET-NUM:</font></td>
+        <td valign="top" width="50" nowrap><font size="2"
+        face="Courier New">CP</font></td>
+        <td valign="top" width="120" nowrap><font size="2"
+        face="Courier New">26</font></td>
+        <td valign="top" nowrap><font size="2" face="Courier New">;
+        Jump if dealing with a digit 'A'=26H</font></td>
+    </tr>
+    <tr>
+        <td valign="top" width="50" nowrap><font size="2"
+        face="Courier New">1027</font></td>
+        <td valign="top" width="120" nowrap><font size="2"
+        face="Courier New">38 1E</font></td>
+        <td valign="top" width="100" nowrap>&nbsp;</td>
+        <td valign="top" width="50" nowrap><font size="2"
+        face="Courier New">JR</font></td>
+        <td valign="top" width="120" nowrap><font size="2"
+        face="Courier New">C,1047</font></td>
+        <td valign="top" nowrap><font size="2" face="Courier New">;
+        to the S-DECIMAL routine</font></td>
+    </tr>
+    <tr>
+        <td valign="top" width="50" nowrap><font size="2"
+        face="Courier New">1029</font></td>
+        <td valign="top" width="120" nowrap><font size="2"
+        face="Courier New">CD 1C 11</font></td>
+        <td valign="top" width="100" nowrap>&nbsp;</td>
+        <td valign="top" width="50" nowrap><font size="2"
+        face="Courier New">CALL</font></td>
+        <td valign="top" width="120" nowrap><font size="2"
+        face="Courier New">111C</font></td>
+        <td valign="top" nowrap><font size="2" face="Courier New">;
+        We have a variable name. See if it exists by calling LOOK-VARS</font></td>
+    </tr>
+    <tr>
+        <td valign="top" width="50" nowrap><font size="2"
+        face="Courier New">102C</font></td>
+        <td valign="top" width="120" nowrap><font size="2"
+        face="Courier New">DA 4B 0D</font></td>
+        <td valign="top" width="100" nowrap>&nbsp;</td>
+        <td valign="top" width="50" nowrap><font size="2"
+        face="Courier New">JP</font></td>
+        <td valign="top" width="120" nowrap><font size="2"
+        face="Courier New">C,0D4B</font></td>
+        <td valign="top" nowrap><font size="2" face="Courier New">;
+        REPORT-2 (Undefined variable)</font></td>
+    </tr>
+    <tr>
+        <td valign="top" width="50" nowrap><font size="2"
+        face="Courier New">102F</font></td>
+        <td valign="top" width="120" nowrap><font size="2"
+        face="Courier New">CC A7 11</font></td>
+        <td valign="top" width="100" nowrap>&nbsp;</td>
+        <td valign="top" width="50" nowrap><font size="2"
+        face="Courier New">CALL</font></td>
+        <td valign="top" width="120" nowrap><font size="2"
+        face="Courier New">Z,11A7</font></td>
+        <td valign="top" nowrap><font size="2" face="Courier New">;
+        Call STK-VAR to stack parameters for a string or string
+        array</font></td>
+    </tr>
+    <tr>
+        <td valign="top" width="50" nowrap><font size="2"
+        face="Courier New">1032</font></td>
+        <td valign="top" width="120" nowrap><font size="2"
+        face="Courier New">3A 01 40</font></td>
+        <td valign="top" width="100" nowrap>&nbsp;</td>
+        <td valign="top" width="50" nowrap><font size="2"
+        face="Courier New">LD</font></td>
+        <td valign="top" width="120" nowrap><font size="2"
+        face="Courier New">A,(4001)</font></td>
+        <td valign="top" nowrap><font size="2" face="Courier New">;
+        Fetch the value of FLAGS</font></td>
+    </tr>
+    <tr>
+        <td valign="top" width="50" nowrap><font size="2"
+        face="Courier New">1035</font></td>
+        <td valign="top" width="120" nowrap><font size="2"
+        face="Courier New">FE C0</font></td>
+        <td valign="top" width="100" nowrap>&nbsp;</td>
+        <td valign="top" width="50" nowrap><font size="2"
+        face="Courier New">CP</font></td>
+        <td valign="top" width="120" nowrap><font size="2"
+        face="Courier New">C0</font></td>
+        <td valign="top" nowrap><font size="2" face="Courier New">;
+        Test bit 6 &amp; 7 together</font></td>
+    </tr>
+    <tr>
+        <td valign="top" width="50" nowrap><font size="2"
+        face="Courier New">1037</font></td>
+        <td valign="top" width="120" nowrap><font size="2"
+        face="Courier New">38 4E</font></td>
+        <td valign="top" width="100" nowrap>&nbsp;</td>
+        <td valign="top" width="50" nowrap><font size="2"
+        face="Courier New">JR</font></td>
+        <td valign="top" width="120" nowrap><font size="2"
+        face="Courier New">C,1087</font></td>
+        <td valign="top" nowrap><font size="2" face="Courier New">;
+        Jump to S-CONT-2 to continue processing if not a number
+        and/or are syntax checking</font></td>
+    </tr>
+    <tr>
+        <td valign="top" width="50" nowrap><font size="2"
+        face="Courier New">1039</font></td>
+        <td valign="top" width="120" nowrap><font size="2"
+        face="Courier New">23</font></td>
+        <td valign="top" width="100" nowrap>&nbsp;</td>
+        <td valign="top" width="50" nowrap><font size="2"
+        face="Courier New">INC</font></td>
+        <td valign="top" width="120" nowrap><font size="2"
+        face="Courier New">HL</font></td>
+        <td valign="top" nowrap><font size="2" face="Courier New">;
+        A numeric value is to be stacked during line execution</font></td>
+    </tr>
+    <tr>
+        <td valign="top" width="50" nowrap><font size="2"
+        face="Courier New">103A</font></td>
+        <td valign="top" width="120" nowrap><font size="2"
+        face="Courier New">ED 5B 1C 40</font></td>
+        <td valign="top" width="100" nowrap>&nbsp;</td>
+        <td valign="top" width="50" nowrap><font size="2"
+        face="Courier New">LD</font></td>
+        <td valign="top" width="120" nowrap><font size="2"
+        face="Courier New">DE,(401C)</font></td>
+        <td valign="top" nowrap><font size="2" face="Courier New">;
+        so fetch the old STKEND</font></td>
+    </tr>
+</table>
+</div>
+
+<p>&nbsp;</p>
+
+<h3><a name="FP Bug"><font color="#0000A0">(4) Deleted spurious
+instructions causing floating point bug</font></a></h3>
+
+<p>Unimproved: </p>
+<div align="left">
+
+<table border="0" cellpadding="0" cellspacing="0"
+bgcolor="#FFFFFF">
+    <tr>
+        <td valign="top" width="50" nowrap><font size="2"
+        face="Courier New">1732</font></td>
+        <td valign="top" width="120" nowrap><font size="2"
+        face="Courier New">D9</font></td>
+        <td valign="top" width="100" nowrap><font size="2"
+        face="Courier New">ADDEND-0:</font></td>
+        <td valign="top" width="50" nowrap><font size="2"
+        face="Courier New">EXX</font></td>
+        <td valign="top" width="120" nowrap width="120">&nbsp;</td>
+        <td valign="top" nowrap><font size="2" face="Courier New">;
+        Fetch L', D' &amp; E'</font></td>
+    </tr>
+    <tr>
+        <td valign="top" width="50" nowrap><font size="2"
+        face="Courier New">1733</font></td>
+        <td valign="top" width="120" nowrap><font size="2"
+        face="Courier New">7C</font></td>
+        <td valign="top" width="100" nowrap>&nbsp;</td>
+        <td valign="top" width="50" nowrap><font size="2"
+        face="Courier New">LD</font></td>
+        <td valign="top" width="120" nowrap width="120"><font
+        size="2" face="Courier New">A,H</font></td>
+        <td valign="top" nowrap>&nbsp;</td>
+    </tr>
+    <tr>
+        <td valign="top" width="50" nowrap><font size="2"
+        face="Courier New">1734</font></td>
+        <td valign="top" width="120" nowrap><font size="2"
+        face="Courier New">95</font></td>
+        <td valign="top" width="100" nowrap>&nbsp;</td>
+        <td valign="top" width="50" nowrap><font size="2"
+        face="Courier New">SUB</font></td>
+        <td valign="top" width="120" nowrap width="120"><font
+        size="2" face="Courier New">L</font></td>
+        <td valign="top" nowrap>&nbsp;</td>
+    </tr>
+    <tr>
+        <td valign="top" width="50" nowrap width="50"><font
+        size="2" face="Courier New">1735</font></td>
+        <td valign="top" width="120" nowrap><font size="2"
+        face="Courier New">67</font></td>
+        <td valign="top" width="100" nowrap>&nbsp;</td>
+        <td valign="top" width="50" nowrap><font size="2"
+        face="Courier New">LD</font></td>
+        <td valign="top" width="120" nowrap><font size="2"
+        face="Courier New">H,A</font></td>
+        <td valign="top" nowrap>&nbsp;</td>
+    </tr>
+    <tr>
+        <td valign="top" width="50" nowrap><font size="2"
+        face="Courier New">1736</font></td>
+        <td valign="top" width="120" nowrap><font size="2"
+        face="Courier New">AF</font></td>
+        <td valign="top" width="100" nowrap>&nbsp;</td>
+        <td valign="top" width="50" nowrap><font size="2"
+        face="Courier New">XOR</font></td>
+        <td valign="top" width="120" nowrap width="120"><font
+        size="2" face="Courier New">A</font></td>
+        <td valign="top" nowrap><font size="2" face="Courier New">;
+        Clear the A register</font></td>
+    </tr>
+    <tr>
+        <td valign="top" width="50" nowrap><font size="2"
+        face="Courier New">1737</font></td>
+        <td valign="top" width="120" nowrap><font size="2"
+        face="Courier New">2E 00</font></td>
+        <td valign="top" width="100" nowrap><font size="2"
+        face="Courier New">ZEROS-4/5:</font></td>
+        <td valign="top" width="50" nowrap><font size="2"
+        face="Courier New">LD</font></td>
+        <td valign="top" width="120" nowrap width="120"><font
+        size="2" face="Courier New">L,0</font></td>
+        <td valign="top" nowrap><font size="2" face="Courier New">;
+        Sign indicator</font></td>
+    </tr>
+</table>
+</div>
+
+<p>Improved: </p>
+<div align="left">
+
+<table border="0" cellpadding="0" cellspacing="0"
+bgcolor="#FFFFFF">
+    <tr>
+        <td valign="top" width="50" nowrap><font size="2"
+        face="Courier New">1736</font></td>
+        <td valign="top" width="120" nowrap><font size="2"
+        face="Courier New">D9</font></td>
+        <td valign="top" width="100" nowrap><font size="2"
+        face="Courier New">ADDEND-0:</font></td>
+        <td valign="top" width="50" nowrap><font size="2"
+        face="Courier New">EXX</font></td>
+        <td valign="top" width="120" nowrap>&nbsp;</td>
+        <td valign="top" nowrap><font size="2" face="Courier New">;
+        Fetch L', D' &amp; E'</font></td>
+    </tr>
+    <tr>
+        <td valign="top" width="50" nowrap><font size="2"
+        face="Courier New">1737</font></td>
+        <td valign="top" width="120" nowrap><font size="2"
+        face="Courier New">AF</font></td>
+        <td valign="top" width="100" nowrap>&nbsp;</td>
+        <td valign="top" width="50" nowrap><font size="2"
+        face="Courier New">XOR</font></td>
+        <td valign="top" width="120" nowrap><font size="2"
+        face="Courier New">A</font></td>
+        <td valign="top" nowrap><font size="2" face="Courier New">;
+        Clear the A register</font></td>
+    </tr>
+    <tr>
+        <td valign="top" width="50" nowrap><font size="2"
+        face="Courier New">1738</font></td>
+        <td valign="top" width="120" nowrap><font size="2"
+        face="Courier New">2E 00</font></td>
+        <td valign="top" width="100" nowrap><font size="2"
+        face="Courier New">ZEROS-4/5:</font></td>
+        <td valign="top" width="50" nowrap><font size="2"
+        face="Courier New">LD</font></td>
+        <td valign="top" width="120" nowrap><font size="2"
+        face="Courier New">L,0</font></td>
+        <td valign="top" nowrap><font size="2" face="Courier New">;
+        Sign indicator</font></td>
+    </tr>
+</table>
+</div>
+
+<p>&nbsp;</p>
+
+<h3><font color="#0000A0">(</font><a name="Offset Differences"><font
+color="#0000A0">5) Offset Differences</font></a></h3>
+
+<p><font color="#0000A0">The ROM contents also differs at various
+locations where the target of an address reference has changed.
+For example, the first of these differences is at 0029. This is
+part of a call to the floating point CALCULATE routine.</font></p>
+
+<p>Unimproved:</p>
+<div align="left">
+
+<table border="0" cellpadding="0" cellspacing="0"
+bgcolor="#FFFFFF">
+    <tr>
+        <td valign="top" width="50" nowrap><font size="2"
+        face="Courier New">0028</font></td>
+        <td valign="top" width="120" nowrap><font size="2"
+        face="Courier New">C3 9C 19</font></td>
+        <td valign="top" width="100" nowrap>&nbsp;</td>
+        <td valign="top" width="50" nowrap><font size="2"
+        face="Courier New">JP</font></td>
+        <td valign="top" width="120" nowrap><font size="2"
+        face="Courier New">199C</font></td>
+        <td valign="top" nowrap><font size="2" face="Courier New">;
+        CALCULATE</font></td>
+    </tr>
+</table>
+</div>
+
+<p>Improved:</p>
+<div align="left">
+
+<table border="0" cellpadding="0" cellspacing="0"
+bgcolor="#FFFFFF">
+    <tr>
+        <td valign="top" width="50" nowrap><font size="2"
+        face="Courier New">0028</font></td>
+        <td valign="top" width="120" nowrap><font size="2"
+        face="Courier New">C3 9D 19</font></td>
+        <td valign="top" width="100" nowrap>&nbsp;</td>
+        <td valign="top" width="50" nowrap><font size="2"
+        face="Courier New">JP</font></td>
+        <td valign="top" width="120" nowrap><font size="2"
+        face="Courier New">199D</font></td>
+        <td valign="top" nowrap><font size="2" face="Courier New">;
+        CALCULATE</font></td>
+    </tr>
+</table>
+</div>
+
+<p>&nbsp;</p>
+
+<h3><font color="#0000A0">(</font><a name="Spare Bytes"><font
+color="#0000A0">6) Spare Bytes</font></a></h3>
+
+<p><font color="#0000A0">Finally, at the end of the ROM (just
+prior to the character bitmaps) the unimproved ROM has two spare
+locations (1DFE &amp; 1DFF) whereas the improved ROM only has one
+(1DFF). These locations contain FF.</font></p>
+
+<hr>
+
+<p align="right">(C) Copyright Mr. S. C. Agate, BSc (Hons.)<br>
+Last revised: <!--webbot bot="Timestamp" startspan
+s-type="EDITED" s-format="%d %B %Y" -->11 December 2001<!--webbot
+bot="Timestamp" i-checksum="38711" endspan -->.<br>
+<a href="http://www.agate.f9.co.uk">http://www.agate.f9.co.uk</a></p>
+</body>
+</html>
