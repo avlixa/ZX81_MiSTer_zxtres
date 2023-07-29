@@ -12,15 +12,15 @@
       </db_ref>
    </db_ref_list>
    <zoom_setting>
-      <ZoomStartTime time="0.000000000 ms"></ZoomStartTime>
-      <ZoomEndTime time="67.300000001 ms"></ZoomEndTime>
-      <Cursor1Time time="9.950652359 ms"></Cursor1Time>
+      <ZoomStartTime time="41,812.492948 us"></ZoomStartTime>
+      <ZoomEndTime time="41,886.192949 us"></ZoomEndTime>
+      <Cursor1Time time="41,873.909615 us"></Cursor1Time>
    </zoom_setting>
    <column_width_setting>
       <NameColumnWidth column_width="175"></NameColumnWidth>
-      <ValueColumnWidth column_width="95"></ValueColumnWidth>
+      <ValueColumnWidth column_width="87"></ValueColumnWidth>
    </column_width_setting>
-   <WVObjectSize size="202" />
+   <WVObjectSize size="193" />
    <wvobject type="logic" fp_name="/zx81_zxtres_a35t/CLK50">
       <obj_property name="ElementShortName">CLK50</obj_property>
       <obj_property name="ObjectShortName">CLK50</obj_property>
@@ -62,16 +62,16 @@
       <obj_property name="ObjectShortName">ce_psg</obj_property>
    </wvobject>
    <wvobject type="array" fp_name="/zx81_zxtres_a35t/VGA_R">
-      <obj_property name="ElementShortName">VGA_R[5:0]</obj_property>
-      <obj_property name="ObjectShortName">VGA_R[5:0]</obj_property>
+      <obj_property name="ElementShortName">VGA_R[7:0]</obj_property>
+      <obj_property name="ObjectShortName">VGA_R[7:0]</obj_property>
    </wvobject>
    <wvobject type="array" fp_name="/zx81_zxtres_a35t/VGA_G">
-      <obj_property name="ElementShortName">VGA_G[5:0]</obj_property>
-      <obj_property name="ObjectShortName">VGA_G[5:0]</obj_property>
+      <obj_property name="ElementShortName">VGA_G[7:0]</obj_property>
+      <obj_property name="ObjectShortName">VGA_G[7:0]</obj_property>
    </wvobject>
    <wvobject type="array" fp_name="/zx81_zxtres_a35t/VGA_B">
-      <obj_property name="ElementShortName">VGA_B[5:0]</obj_property>
-      <obj_property name="ObjectShortName">VGA_B[5:0]</obj_property>
+      <obj_property name="ElementShortName">VGA_B[7:0]</obj_property>
+      <obj_property name="ObjectShortName">VGA_B[7:0]</obj_property>
    </wvobject>
    <wvobject type="logic" fp_name="/zx81_zxtres_a35t/VGA_HS">
       <obj_property name="ElementShortName">VGA_HS</obj_property>
@@ -84,6 +84,61 @@
    <wvobject type="logic" fp_name="/zx81_zxtres_a35t/PAL_N">
       <obj_property name="ElementShortName">PAL_N</obj_property>
       <obj_property name="ObjectShortName">PAL_N</obj_property>
+   </wvobject>
+   <wvobject type="group" fp_name="group203">
+      <obj_property name="label">New Group</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+      <obj_property name="isExpanded"></obj_property>
+      <wvobject type="logic" fp_name="/zx81_zxtres_a35t/video_mixer/CLK_VIDEO">
+         <obj_property name="ElementShortName">CLK_VIDEO</obj_property>
+         <obj_property name="ObjectShortName">CLK_VIDEO</obj_property>
+      </wvobject>
+      <wvobject type="logic" fp_name="/zx81_zxtres_a35t/video_mixer/CLK_PIXVGA">
+         <obj_property name="ElementShortName">CLK_PIXVGA</obj_property>
+         <obj_property name="ObjectShortName">CLK_PIXVGA</obj_property>
+      </wvobject>
+      <wvobject type="logic" fp_name="/zx81_zxtres_a35t/video_mixer/ce_pix">
+         <obj_property name="ElementShortName">ce_pix</obj_property>
+         <obj_property name="ObjectShortName">ce_pix</obj_property>
+      </wvobject>
+      <wvobject type="logic" fp_name="/zx81_zxtres_a35t/video_mixer/HBlank">
+         <obj_property name="ElementShortName">HBlank</obj_property>
+         <obj_property name="ObjectShortName">HBlank</obj_property>
+      </wvobject>
+      <wvobject type="logic" fp_name="/zx81_zxtres_a35t/video_mixer/VBlank">
+         <obj_property name="ElementShortName">VBlank</obj_property>
+         <obj_property name="ObjectShortName">VBlank</obj_property>
+      </wvobject>
+      <wvobject type="array" fp_name="/zx81_zxtres_a35t/video_mixer/cx">
+         <obj_property name="ElementShortName">cx[9:0]</obj_property>
+         <obj_property name="ObjectShortName">cx[9:0]</obj_property>
+         <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+      </wvobject>
+      <wvobject type="array" fp_name="/zx81_zxtres_a35t/video_mixer/cy">
+         <obj_property name="ElementShortName">cy[9:0]</obj_property>
+         <obj_property name="ObjectShortName">cy[9:0]</obj_property>
+         <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+      </wvobject>
+      <wvobject type="array" fp_name="/zx81_zxtres_a35t/video_mixer/row">
+         <obj_property name="ElementShortName">row[8:0]</obj_property>
+         <obj_property name="ObjectShortName">row[8:0]</obj_property>
+         <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+      </wvobject>
+      <wvobject type="array" fp_name="/zx81_zxtres_a35t/video_mixer/col">
+         <obj_property name="ElementShortName">col[8:0]</obj_property>
+         <obj_property name="ObjectShortName">col[8:0]</obj_property>
+         <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+      </wvobject>
+      <wvobject type="array" fp_name="/zx81_zxtres_a35t/video_mixer/add_a">
+         <obj_property name="ElementShortName">add_a[16:0]</obj_property>
+         <obj_property name="ObjectShortName">add_a[16:0]</obj_property>
+         <obj_property name="Radix">HEXRADIX</obj_property>
+      </wvobject>
+      <wvobject type="array" fp_name="/zx81_zxtres_a35t/video_mixer/add_b">
+         <obj_property name="ElementShortName">add_b[16:0]</obj_property>
+         <obj_property name="ObjectShortName">add_b[16:0]</obj_property>
+         <obj_property name="Radix">HEXRADIX</obj_property>
+      </wvobject>
    </wvobject>
    <wvobject type="logic" fp_name="/zx81_zxtres_a35t/LED1">
       <obj_property name="ElementShortName">LED1</obj_property>
@@ -637,26 +692,6 @@
       <obj_property name="ElementShortName">ch81_out[7:0]</obj_property>
       <obj_property name="ObjectShortName">ch81_out[7:0]</obj_property>
    </wvobject>
-   <wvobject type="logic" fp_name="/zx81_zxtres_a35t/sram_cycle">
-      <obj_property name="ElementShortName">sram_cycle</obj_property>
-      <obj_property name="ObjectShortName">sram_cycle</obj_property>
-   </wvobject>
-   <wvobject type="array" fp_name="/zx81_zxtres_a35t/ch81_addr">
-      <obj_property name="ElementShortName">ch81_addr[13:0]</obj_property>
-      <obj_property name="ObjectShortName">ch81_addr[13:0]</obj_property>
-   </wvobject>
-   <wvobject type="logic" fp_name="/zx81_zxtres_a35t/ch81_wrena">
-      <obj_property name="ElementShortName">ch81_wrena</obj_property>
-      <obj_property name="ObjectShortName">ch81_wrena</obj_property>
-   </wvobject>
-   <wvobject type="logic" fp_name="/zx81_zxtres_a35t/chroma81_loader">
-      <obj_property name="ElementShortName">chroma81_loader</obj_property>
-      <obj_property name="ObjectShortName">chroma81_loader</obj_property>
-   </wvobject>
-   <wvobject type="logic" fp_name="/zx81_zxtres_a35t/def_vmode_d">
-      <obj_property name="ElementShortName">def_vmode_d</obj_property>
-      <obj_property name="ObjectShortName">def_vmode_d</obj_property>
-   </wvobject>
    <wvobject type="logic" fp_name="/zx81_zxtres_a35t/qs_e">
       <obj_property name="ElementShortName">qs_e</obj_property>
       <obj_property name="ObjectShortName">qs_e</obj_property>
@@ -664,26 +699,6 @@
    <wvobject type="array" fp_name="/zx81_zxtres_a35t/qs_out">
       <obj_property name="ElementShortName">qs_out[7:0]</obj_property>
       <obj_property name="ObjectShortName">qs_out[7:0]</obj_property>
-   </wvobject>
-   <wvobject type="logic" fp_name="/zx81_zxtres_a35t/qs_wea">
-      <obj_property name="ElementShortName">qs_wea</obj_property>
-      <obj_property name="ObjectShortName">qs_wea</obj_property>
-   </wvobject>
-   <wvobject type="logic" fp_name="/zx81_zxtres_a35t/qs_web">
-      <obj_property name="ElementShortName">qs_web</obj_property>
-      <obj_property name="ObjectShortName">qs_web</obj_property>
-   </wvobject>
-   <wvobject type="array" fp_name="/zx81_zxtres_a35t/qs_data">
-      <obj_property name="ElementShortName">qs_data[7:0]</obj_property>
-      <obj_property name="ObjectShortName">qs_data[7:0]</obj_property>
-   </wvobject>
-   <wvobject type="array" fp_name="/zx81_zxtres_a35t/qs_addra">
-      <obj_property name="ElementShortName">qs_addra[9:0]</obj_property>
-      <obj_property name="ObjectShortName">qs_addra[9:0]</obj_property>
-   </wvobject>
-   <wvobject type="array" fp_name="/zx81_zxtres_a35t/qs_addrb">
-      <obj_property name="ElementShortName">qs_addrb[9:0]</obj_property>
-      <obj_property name="ObjectShortName">qs_addrb[9:0]</obj_property>
    </wvobject>
    <wvobject type="logic" fp_name="/zx81_zxtres_a35t/qs">
       <obj_property name="ElementShortName">qs</obj_property>

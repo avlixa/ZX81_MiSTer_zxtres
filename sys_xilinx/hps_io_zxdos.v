@@ -230,9 +230,13 @@ module hps_io //#(parameter STRLEN=0, PS2DIV=0, WIDE=0, VDNUM=1, PS2WE=0)
 
    //hardreset ****************************************************
 
-   multiboot #(.SPIADDR(24'h0B0000)) reiniciozxdos (
+   //multiboot #(.SPIADDR(24'h0B0000)) reiniciozxdos (
+//      .clk_icap(clk_sys),
+//      .REBOOT(hardreset || hardreset_ZPU)
+//   );
+   multiboot reiniciozxdos (
       .clk_icap(clk_sys),
-      .REBOOT(hardreset || hardreset_ZPU)
+      .reboot(hardreset || hardreset_ZPU)
    );
 
    //ZPUFLEX Control module

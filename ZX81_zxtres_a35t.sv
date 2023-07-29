@@ -998,24 +998,34 @@ end
 //video_mixer #(400,1,1) video_mixer
 video_mixer #(400,1) video_mixer
 (
+	.reset(reset),
 	.CLK_VIDEO(CLK_VIDEO),
-   .CE_PIXEL(CE_PIXEL),
+	.CLK_PIXVGA(clk_156m), //25.2Mhz
+    .CE_PIXEL(CE_PIXEL),
    
 	.ce_pix(ce_6m5),
 	//.scandoubler(scale || forced_scandoubler), //testing
 	//.hq2x(scale == 1),
-   .scandoubler( forced_scandoubler ),
+    .scandoubler( forced_scandoubler ),
+    .vfreq50hz( hz50 ),
 
 	.VGA_DE(vga_de),
+	`ifndef ZX3
 	.R({r,{3{i & r}}}),
 	.G({g,{3{i & g}}}),
 	.B({b,{3{i & b}}}),
+	`else
+	.I(i),
+	.R(r),
+	.G(g),
+	.B(b),
+	`endif
    
    .HSync(~HSync),
    .VSync(VSync),
 
 	.HBlank(hblank),
-	.VBlank(vblank),
+	.VBlank(vblank_rgb), //.VBlank(vblank),
 
    //ZPUFlex OSD
    .osd_window(osd_window),

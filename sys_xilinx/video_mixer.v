@@ -25,17 +25,28 @@ module video_mixer
 	parameter HALF_DEPTH   = 0
 )
 (
+	input            reset,
 	input            CLK_VIDEO, // should be multiple by (ce_pix*4)
+	input            CLK_PIXVGA, //Clock pixel VGA
 	output reg       CE_PIXEL,  // output pixel clock enable
 
 	input            ce_pix,    // input pixel clock or clock_enable
 
 	input            scandoubler,
+	input            vfreq50hz,
+
 
 	// color
+	`ifndef ZX3
 	input [DWIDTH:0] R,
 	input [DWIDTH:0] G,
 	input [DWIDTH:0] B,
+	`else
+	input I,
+	input R,
+	input G,
+	input B,
+	`endif
 
 	// Positive pulses.
 	input            HSync,
@@ -70,9 +81,26 @@ module video_mixer
    localparam HALF_DEPTH_SD =  HALF_DEPTH;
 
 
+    //señal fija vga para ZX3
+    wire hsyncvgan,vsyncvgan,devga;
+    wire [9:0] cx, cy;
+
+
+  `ifndef ZX3
    wire [DWIDTH:0] R_in  = R;
    wire [DWIDTH:0] G_in  = G;
    wire [DWIDTH:0] B_in  = B;
+   wire framebuffer = 1'b0;
+   `else
+   wire [DWIDTH:0] R_in  = {R,{DWIDTH{I & R}}};
+   wire [DWIDTH:0] G_in  = {G,{DWIDTH{I & G}}};
+   wire [DWIDTH:0] B_in  = {B,{DWIDTH{I & B}}};
+   
+   wire [DWIDTH_SD:0] R_fb  = {data_b[2],{DWIDTH_SD{data_b[3] & data_b[2]}}};
+   wire [DWIDTH_SD:0] G_fb  = {data_b[1],{DWIDTH_SD{data_b[3] & data_b[1]}}};
+   wire [DWIDTH_SD:0] B_fb  = {data_b[0],{DWIDTH_SD{data_b[3] & data_b[0]}}};
+   wire framebuffer = scandoubler;
+   `endif
 
    wire hs_g, vs_g;
    wire hb_g, vb_g;
@@ -112,9 +140,9 @@ module video_mixer
       .b_out(B_sd)
    );
 
-   wire [DWIDTH_SD:0] rt = (scandoubler ? R_sd : R_gamma);
-   wire [DWIDTH_SD:0] gt = (scandoubler ? G_sd : G_gamma);
-   wire [DWIDTH_SD:0] bt = (scandoubler ? B_sd : B_gamma);
+   wire [DWIDTH_SD:0] rt = framebuffer? R_fb : (scandoubler ? R_sd : R_gamma);
+   wire [DWIDTH_SD:0] gt = framebuffer? G_fb : (scandoubler ? G_sd : G_gamma);
+   wire [DWIDTH_SD:0] bt = framebuffer? B_fb : (scandoubler ? B_sd : B_gamma);
 
    reg [7:0] vga_red_i, vga_green_i, vga_blue_i;
 
@@ -134,7 +162,7 @@ module video_mixer
          ce_osc <= 0;
       end
 
-      CE_PIXEL <= scandoubler ? ce_pix_sd : fs_osc ? (~old_ce & ce_pix) : ce_pix;
+      CE_PIXEL <= framebuffer? CLK_PIXVGA :  scandoubler ? ce_pix_sd : fs_osc ? (~old_ce & ce_pix) : ce_pix;
 
       if( HALF_DEPTH) begin
          r <= {rt,rt[DWIDTH_SD:DWIDTH_SD-1]};
@@ -147,10 +175,10 @@ module video_mixer
          b <= bt;
       end
 
-      hde <= scandoubler ? ~hb_sd : ~hb_g;
-      vde <= scandoubler ?  vb_sd :  vb_g;
-      vs  <= scandoubler ?  vs_sd :  vs_g;
-      hs  <= scandoubler ?  hs_sd :  hs_g;
+      hde <= framebuffer? devga : scandoubler ? ~hb_sd : ~hb_g;
+      vde <= framebuffer? devga : scandoubler ?  vb_sd :  vb_g;
+      vs  <= framebuffer? vsyncvgan : scandoubler ?  vs_sd :  vs_g;
+      hs  <= framebuffer? hsyncvgan : scandoubler ?  hs_sd :  hs_g;
 
       if(CE_PIXEL) begin
          vga_red_i   <= (!hde || !vde) ? 0 : {r,2'b0};
@@ -194,6 +222,82 @@ module video_mixer
    assign VGA_R = vga_red_o[7:5];
    assign VGA_G = vga_green_o[7:5];
    assign VGA_B = vga_blue_o[7:5];
-`endif   
+`endif
+
+`ifdef ZX3 
+//framebuffer 256x192=49152x4=196.608  2^16=65536 2^18 = 262144 // 328x¿308? =101024x4=404096  2^17=131072 
+    vga_signal_480p vga_signal_480p(
+        .clk_pix( CLK_PIXVGA ),
+        .reset_pix( reset ),
+        .sx( cx ),
+        .sy( cy ),
+        .hsyncn( hsyncvgan ),
+        .vsyncn( vsyncvgan ),
+        .de( devga )
+        );
+        reg [8:0] row,col;
+        reg [16:0] add_a,add_b;
+        reg [3:0] data_a;
+        wire [3:0] data_b;
+        reg [1:0] wren_a;
+        
+        
+        dpram #(.DATAWIDTH(4), .ADDRWIDTH(17)) framebuffer_dpram
+        (
+            .clocka(CLK_VIDEO),
+            .clockb(CLK_PIXVGA),
+            .address_a(add_a),
+            .wren_a(wren_a[0]),
+            .data_a(data_a),
+            //.q_a(),
+            
+            .address_b(add_b),
+            //.data_b(),
+            .wren_b(1'b0),
+            .q_b(data_b)
+        );
+
+    always @(posedge CLK_VIDEO) begin :block_fbin
+      reg old_hblank;
+      wren_a[1] <= wren_a[0]; 
+      if (reset) begin
+        row <= 9'b0;
+        col <= 9'b0;
+        wren_a <= 2'b0;
+      end
+      else if (ce_pix) begin
+        old_hblank <= HBlank;
+        if (~VBlank) row <= vfreq50hz ? 9'h1e7 : 9'h1ff;
+        else if (~HBlank & old_hblank) begin
+            row <= row + 1'b1; 
+            col <= 9'b0;
+        end
+        else col <= col + 1'b1;
+        //if (HBlank) col <= 9'b0;
+        //else col <= col + 1'b1;
+        
+        add_a <= {row[7:0],col};
+        data_a <= {I,R,G,B};
+        wren_a[0] <= 1'b1;
+      end else begin
+        wren_a[0] <= 1'b0;
+      end 
+    end
+
+    always @(posedge CLK_PIXVGA) begin :block_fbout
+      reg old_hblank;
+      
+      if (reset) begin
+        add_b <= 17'b0;
+        //data_b <= 4'b0;
+      end
+      else begin
+        add_b <= {cy[8:1],cx[9:1]};
+        //data_b <= {I,R,G,B};
+      end 
+    end    
+      
+`endif        
+
 endmodule
 
