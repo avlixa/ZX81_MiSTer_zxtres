@@ -58,7 +58,7 @@ module zx81_zxdos_lx16
 `elsif ZX1
 module zx81_zxuno_lx9
 `elsif ZX3
-module zx81_zxtres_a35t
+    module zx81_zxtres_aXXt
 `else
 module zx81_
 `endif
@@ -971,7 +971,8 @@ assign vblank = forced_scandoubler ? vblank_vga : vblank_rgb;
 //wire i,g,r,b;
 reg i,g,r,b;
 always @* begin
-	casex({(status[5] & border) || ~vblank, ch81_dat[5], border, video_out}) //Black border:Off,On;
+	//casex({(status[5] & border) || ~vblank, ch81_dat[5], border, video_out}) //Black border:Off,On;
+	casex({(status[5] & border) || (~vblank_rgb &  ~forced_scandoubler), ch81_dat[5], border, video_out}) //Black border:Off,On;
 		'b1XXX: {i,g,r,b} <= 0;
 		'b00XX: {i,g,r,b} <= {4{video_out}};
 		'b011X: {i,g,r,b} <= ch81_dat[3:0];
@@ -994,6 +995,8 @@ always @(posedge CLK_VIDEO) begin
    if( !oldvs2 && vs2 ) row_number <= 10'd308;
    if( oldvs2 && !vs2 ) row_number <= 10'd0;
 end
+ 
+ reg [8:0] firstlinepal_r, firstlinentsc_r;
  
 //video_mixer #(400,1,1) video_mixer
 video_mixer #(400,1) video_mixer
@@ -1022,7 +1025,8 @@ video_mixer #(400,1) video_mixer
 	`endif
    
    .HSync(~HSync),
-   .VSync(VSync),
+   //.VSync(VSync),
+   .VSync(~VSync),
 
 	.HBlank(hblank),
 	.VBlank(vblank_rgb), //.VBlank(vblank),
@@ -1036,6 +1040,8 @@ video_mixer #(400,1) video_mixer
    .VGA_R(VGA_R[7:2]),
    .VGA_G(VGA_G[7:2]),
    .VGA_B(VGA_B[7:2]),
+   .firstlinepal(firstlinepal_r),
+   .firstlinentsc(firstlinentsc_r),
    `else
    .VGA_R(VGA_R),
    .VGA_G(VGA_G),
@@ -1328,6 +1334,30 @@ always @(posedge clk_sys) begin :jt49_ym2149_select_reg
    else if ( f7key_r == 1'b1 && Fn[7] == 1'b0) psgjt_r <= ~psgjt_r;
 end
 
+always @(posedge clk_sys) begin :firlinepal_ntsc_reg
+	reg pluskey_r, minuskey_r, asteriskkey_r;
+   pluskey_r <= pma_keys[0];
+   minuskey_r <= pma_keys[1];
+   asteriskkey_r <= pma_keys[2];
+   if (!locked) begin
+      firstlinepal_r <= 9'h1db;
+      firstlinentsc_r <= 9'h1f3;
+   end
+   else if ( pluskey_r == 1'b1 && pma_keys[0] == 1'b0) begin
+      firstlinepal_r[8:2] <= firstlinepal_r[8:2] + 1'b1;
+      firstlinentsc_r[8:2] <= firstlinentsc_r[8:2] + 1'b1;   
+   end
+   else if ( minuskey_r == 1'b1 && pma_keys[1] == 1'b0) begin
+      firstlinepal_r[8:2] <= firstlinepal_r[8:2] - 1'b1;
+      firstlinentsc_r[8:2] <= firstlinentsc_r[8:2] - 1'b1;     
+   end
+   else if ( asteriskkey_r == 1'b1 && pma_keys[2] == 1'b0) begin
+      firstlinepal_r <= 9'h1db;
+      firstlinentsc_r <= 9'h1f3;   
+   end 
+end
+ 
+
 //assign AUDIO_L   = {audio_l, 6'd0};
 //assign AUDIO_R   = {audio_r, 6'd0};
 //assign AUDIO_S   = 0;
@@ -1341,8 +1371,9 @@ end
 wire kbd_n = nIORQ | nRD | addr[0];
  
 wire [11:1] Fn;
-wire  [2:0] mod;
+wire  [2:0] mod; //CTRL, ALT, SHIFT
 wire  [4:0] key_data;
+wire  [2:0] pma_keys; // *, -, + (teclado numérico)
 
 keyboard kbd(
    .reset(reset),
@@ -1352,6 +1383,7 @@ keyboard kbd(
    .addr(addr),
    .key_data(key_data),
    .Fn(Fn),   //F11-F1
+   .pma(pma_keys ), // *, -, + (teclado numérico)
    .mod(mod)  //CTRL, ALT, SHIFT
 );
 

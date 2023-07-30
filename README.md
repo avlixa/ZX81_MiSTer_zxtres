@@ -31,11 +31,12 @@ Port of MiST version by Szombathelyi Gyorgy
   + F8  button: on/off PAL/NTSC carrier signal for composite video
   + F9  button: on/off mic sound to ear
   + F10 button: on/off tape in sound
+  + Numeric keyboard (+,-,*): In VGA mode on ZX3, vertical shift adjustment
 
 ### Install
 Optional: copy rom ZX8X.ROM on folder /zx81/roms: it is a concatenation of ZX81 rom (8k) + ZX80 rom (4k)
 
-Copy .zx1/zx2/.zxd file and install it via BIOS
+Copy .zx1/zx2/.zxd/.zx3 file and install it via BIOS
 
 ### CONFIG.TXT file structure
 ```

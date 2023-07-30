@@ -46,6 +46,8 @@ module video_mixer
 	input R,
 	input G,
 	input B,
+	input [8:0] firstlinepal,
+	input [8:0] firstlinentsc,
 	`endif
 
 	// Positive pulses.
@@ -258,7 +260,7 @@ module video_mixer
         );
 
     always @(posedge CLK_VIDEO) begin :block_fbin
-      reg old_hblank;
+      reg old_hblank, old_vsg, old_hsg, vs_detect;
       wren_a[1] <= wren_a[0]; 
       if (reset) begin
         row <= 9'b0;
@@ -266,9 +268,26 @@ module video_mixer
         wren_a <= 2'b0;
       end
       else if (ce_pix) begin
+        //vs_g hs_g
         old_hblank <= HBlank;
-        if (~VBlank) row <= vfreq50hz ? 9'h1e7 : 9'h1ff;
-        else if (~HBlank & old_hblank) begin
+        old_vsg <= vs_g;
+        old_hsg <= hs_g;
+        
+        //if (~VBlank) row <= vfreq50hz ? 9'h1e7 : 9'h1ff; //ajuste negativo primera línea visible 
+        if (old_vsg & ~vs_g) begin //VS --__ reseteo regs para detectar 2 HS
+            vs_detect <= 1'b0;
+        end
+        else if (~old_vsg & vs_g) begin //VS __--
+            //if (vs_detect) row <= vfreq50hz ? 9'h1e7 : 9'h1ff; //ajuste negativo primera línea visible 
+            if (vs_detect) row <= vfreq50hz ? firstlinepal : firstlinentsc; //9'h1db : 9'h1f3; //ajuste negativo primera línea visible
+        end
+        else if (~old_hsg & hs_g) begin //HS __-- incrementa línea
+            //vs_detect <= vs_g? 1'b0 : 1'b1;
+            vs_detect <= VBlank? 1'b0 : 1'b1;
+            
+        end
+        
+        if (~HBlank & old_hblank) begin //HB --__ incrementa línea 
             row <= row + 1'b1; 
             col <= 9'b0;
         end

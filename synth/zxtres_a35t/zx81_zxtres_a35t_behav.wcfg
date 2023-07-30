@@ -12,15 +12,15 @@
       </db_ref>
    </db_ref_list>
    <zoom_setting>
-      <ZoomStartTime time="41,812.492948 us"></ZoomStartTime>
-      <ZoomEndTime time="41,886.192949 us"></ZoomEndTime>
-      <Cursor1Time time="41,873.909615 us"></Cursor1Time>
+      <ZoomStartTime time="0.000000000 ms"></ZoomStartTime>
+      <ZoomEndTime time="7.410000001 ms"></ZoomEndTime>
+      <Cursor1Time time="0.376444615 ms"></Cursor1Time>
    </zoom_setting>
    <column_width_setting>
       <NameColumnWidth column_width="175"></NameColumnWidth>
-      <ValueColumnWidth column_width="87"></ValueColumnWidth>
+      <ValueColumnWidth column_width="83"></ValueColumnWidth>
    </column_width_setting>
-   <WVObjectSize size="193" />
+   <WVObjectSize size="197" />
    <wvobject type="logic" fp_name="/zx81_zxtres_a35t/CLK50">
       <obj_property name="ElementShortName">CLK50</obj_property>
       <obj_property name="ObjectShortName">CLK50</obj_property>
@@ -101,6 +101,14 @@
          <obj_property name="ElementShortName">ce_pix</obj_property>
          <obj_property name="ObjectShortName">ce_pix</obj_property>
       </wvobject>
+      <wvobject type="logic" fp_name="/zx81_zxtres_a35t/video_mixer/hs_g">
+         <obj_property name="ElementShortName">hs_g</obj_property>
+         <obj_property name="ObjectShortName">hs_g</obj_property>
+      </wvobject>
+      <wvobject type="logic" fp_name="/zx81_zxtres_a35t/video_mixer/vs_g">
+         <obj_property name="ElementShortName">vs_g</obj_property>
+         <obj_property name="ObjectShortName">vs_g</obj_property>
+      </wvobject>
       <wvobject type="logic" fp_name="/zx81_zxtres_a35t/video_mixer/HBlank">
          <obj_property name="ElementShortName">HBlank</obj_property>
          <obj_property name="ObjectShortName">HBlank</obj_property>
@@ -139,6 +147,22 @@
          <obj_property name="ObjectShortName">add_b[16:0]</obj_property>
          <obj_property name="Radix">HEXRADIX</obj_property>
       </wvobject>
+   </wvobject>
+   <wvobject type="logic" fp_name="/zx81_zxtres_a35t/video_mixer/hs_g">
+      <obj_property name="ElementShortName">hs_g</obj_property>
+      <obj_property name="ObjectShortName">hs_g</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/zx81_zxtres_a35t/video_mixer/vs_g">
+      <obj_property name="ElementShortName">vs_g</obj_property>
+      <obj_property name="ObjectShortName">vs_g</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/zx81_zxtres_a35t/video_mixer/hs_g">
+      <obj_property name="ElementShortName">hs_g</obj_property>
+      <obj_property name="ObjectShortName">hs_g</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/zx81_zxtres_a35t/video_mixer/vs_g">
+      <obj_property name="ElementShortName">vs_g</obj_property>
+      <obj_property name="ObjectShortName">vs_g</obj_property>
    </wvobject>
    <wvobject type="logic" fp_name="/zx81_zxtres_a35t/LED1">
       <obj_property name="ElementShortName">LED1</obj_property>

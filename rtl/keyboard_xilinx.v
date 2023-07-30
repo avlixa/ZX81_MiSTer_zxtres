@@ -48,6 +48,7 @@ module keyboard
 	output      [4:0] key_data,
 
 	output reg [11:1] Fn = 0,
+	output reg [2:0]  pma = 0,  // *, -, + keys (teclado numérico)
 	output reg  [2:0] mod = 0
 );
 
@@ -100,6 +101,9 @@ always @(posedge clk_sys) begin :block1
 			8'h01: Fn[9] <= ~release_btn; // F9
 			8'h09: Fn[10]<= ~release_btn; // F10
 			8'h78: Fn[11]<= ~release_btn; // F11
+			8'h7C: pma[2]<= ~release_btn; // numeric *
+			8'h7B: pma[1]<= ~release_btn; // numeric -
+			8'h79: pma[0]<= ~release_btn; // numeric +
 		endcase
 
 		case(code)
